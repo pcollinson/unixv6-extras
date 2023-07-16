@@ -1,0 +1,14 @@
+: Compile and Install a.out into /bin/sh
+: save old binary to sh.bak, unless it exists
+:
+cc -s -O sh.c
+:
+: backup if needed
+if -r /bin/sh.bak goto skipbak
+cp /bin/sh /bin/sh.bak
+echo '/bin/sh saved into /bin/sh.bak'
+:
+cp a.out /bin/sh
+rm a.out
+echo '/bin/sh installed'
+exit

@@ -1,0 +1,2 @@
+: Compile making a.out
+cc -O -s sh.c
