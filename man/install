@@ -1,0 +1,31 @@
+: Install ssp and the man command
+: ssp first
+cc -s -O ssp.c
+mv a.out /bin/ssp
+echo 'Installed /bin/ssp'
+
+: install man page if not there
+if -r /usr/doc/man/man6/ssp.6 goto skipssp
+cp ssp.6 /usr/doc/man/man6/ssp.6
+echo 'Installed usr/doc/man/man6/ssp.6'
+: skipssp
+
+: installman
+cc -s -O man.c
+mv a.out /bin/man
+echo 'Installed /bin/man'
+
+: install manf
+cp manf.sh /usr/bin/manf
+chmod 777 /usr/bin/manf
+echo 'Installed /usr/bin/manf'
+:
+if -r /usr/doc/man/man6/man.6 goto skipman
+cp man.6 /usr/doc/man/man6/man.6
+echo 'Installed usr/doc/man/man6/man.6'
+: skipman
+if -r /usr/doc/man/man0/naa-man goto skipnaa
+cp naa-man /usr/doc/man/man0/naa-man
+echo 'Installed usr/doc/man/man0/naa-man'
+: skipnaa
+exit

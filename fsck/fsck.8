@@ -1,0 +1,183 @@
+.de us
+\\$1\l'|0\(ul'
+..
+.th FSCK 8 18-AUG-77
+.sh NAME
+fsck \*- file system consistency check and interactive repair
+.sh SYNOPSIS
+.bd fsck
+{ [
+.bd \*-y
+] [
+.bd \*-n
+] [
+.bd \*-q
+] [
+.bd \*-r
+] [
+.bd \*-u
+] [
+.bd \*-s\fIX\fP
+] [
+.bd filesystem
+] } ...
+.sh DESCRIPTION
+.it Fsck
+audits, and interactively repairs inconsistent conditions for \s-2UNIX\s+2 file systems.
+If the file system is consistent then the number of files, number of blocks
+used, and number of blocks free are reported.
+If the file system is inconsistent the operator is prompted for concurrence
+before each correction is attempted.
+It should be noted that most corrective actions will result in some loss
+of data.
+The amount and severity of data lost may be determined from the diagnostic
+output.
+The default action for each consistency correction
+is to wait for the operator to respond "yes" or "no".
+If the operator does not have write permission
+.it fsck
+will default to a
+.bd \*-r
+action.
+.s1
+.it Fsck
+has more consistency checks than
+\fIcheck, dcheck, fcheck, \fPand\fI icheck\fP
+combined.
+.s1
+.lp +0 0
+The following flags are interpreted by
+.it fsck.
+.s1
+.lp +6 5
+\fB\*-y\fR	Assume a yes response to all questions asked by
+.it fsck.
+.s1
+.lp +6 5
+\fB\*-n\fR	Assume a no response to all questions asked by
+.it fsck.
+.s1
+.lp +6 5
+\fB\*-q\fR	Wait for an operator response to each question (default).
+.s1
+.lp +6 5
+\fB\*-r\fR	Open the file system read only.
+.s1
+.lp +6 5
+\fB\*-u\fR	Open the file system for updating (default).
+.s1
+.lp +6 5
+\fB\*-s\fR\fIX\fP	Ignore the actual free list and reconstruct a new
+one by rewriting the super-block of the file system.
+The file system should be unmounted while this is done; if this
+is not possible, care should be taken that the system is quiescent
+and that it is rebooted immediately afterwards.
+This precaution is necessary so that the old, bad, in-core copy
+of the superblock will not continue to be used, or written on the file system.
+.s1
+The
+\fB\*-s\fR\fIX\fP
+option allows for creating an optimal free-list organization.
+The following forms of
+.it X
+are supported for the following devices:
+.lp +12 5
+3	(RP03)
+.lp +12 5
+4	(RP04, RP05, RP06)
+.lp +12 5
+\fIBlocks/cylinder:Blocks-to-skip\fP	(for any other device)
+.lp +6 0
+If
+.it X
+is not given, a default value of
+.it 1:1
+is used.
+.s1
+.lp +0 0
+If no filesystems are given to
+.it fsck
+then a default list of file systems are read from
+the file
+.it /etc/checklist.
+.s1
+Inconsistencies checked are as follows:
+.s1
+.lp +6 5
+1.	Blocks claimed by more than one inode or the free list.
+.br
+.lp +6 5
+2.	Blocks claimed by an inode or the free list outside the range of the file system.
+.br
+.lp +6 5
+3.	Incorrect link counts.
+.br
+.lp +6 5
+.br
+.lp +6 5
+.ne 5
+4.	Size checks:
+.lp +12 0
+.br
+Directories greater than 65536.
+.br
+Incorrect number of blocks.
+.br
+Directory size not 16 byte aligned.
+.br
+Directory entries beyond directory size.
+.br
+.lp +6 5
+5.	Bad inode format.
+.br
+.lp +6 5
+6.	Blocks not accounted for anywhere.
+.br
+.lp +6 5
+.ne 3
+7.	Directory checks:
+.br
+.lp +12 0
+File pointing to unallocated inode.
+.br
+Inode number out of range.
+.br
+.lp +6 5
+.ne 3
+8.	Super Block checks:
+.br
+.lp +12 0
+More than 65536 inodes.
+.br
+More blocks for inodes than there are in the file system.
+.br
+.lp +6 5
+9.	Bad free block list format.
+.br
+.lp +6 5
+10.	Total free block count incorrect.
+.sh FILES
+.lp 21 16
+/etc/checklist	contains default list of file systems to check.
+.sh DIAGNOSTICS
+The diagnostics produced by
+.it fsck
+are intended to be self-explanatory.
+.sh SEE ALSO
+.it checklist
+(V),
+.it fs
+(V),
+.it crash
+(VIII)
+.sh BUGS
+Inode numbers for \fB.\fP and \fB..\fP in each directory should be check for validity.
+.s1
+\fB\*-g\fP, and \fB\*-b\fP options from
+.it check
+should be available in
+.it fsck.
+.s1
+If the actual link count for an inode is zero, but the inode thinks
+it's one, the inode should not be cleared, but rather linked to a scratch
+directory.

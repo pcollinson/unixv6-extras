@@ -1,0 +1,3 @@
+: install the commands
+cp cptree /bin
+cp rmtree /bin

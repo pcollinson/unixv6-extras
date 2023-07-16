@@ -1,0 +1,3 @@
+: install manual pages
+cp cptree.1 /usr/doc/man/man1
+cp rmtree.1 /usr/doc/man/man1

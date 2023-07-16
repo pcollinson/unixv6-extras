@@ -1,0 +1,27 @@
+.th RMTREE 16/07//23
+.sh NAME
+rmtree \*- remove directory and contents
+.sh SYNOPSIS
+.bd rmtree
+directory
+.sh DESCRIPTION
+.it Rmtree
+is a simple shell script to remove all the contentd of a single
+filesystem tree. It first uses the
+.bd rm
+command to remove all the files in the tree. A message is printed if
+there are none.
+.s3
+Next it uses
+.bd find
+to generate a list of directories which it sorts into reverse order.
+The list is placed in
+.it /tmp/dirlist.
+It's then edited to create a list of
+.bd rmdir
+commands that are executed to remove the directories. Finally it
+removes it's temprorary files.
+.sh AUTHOR
+Peter Collinson
+.sh BUGS
+It's a quick hack that works.

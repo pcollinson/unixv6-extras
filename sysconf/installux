@@ -1,0 +1,5 @@
+mv /unix /unix.bak
+cp a.out /unix
+ls -l /unix /unix.bak
+rm a.out
+sync

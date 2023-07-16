@@ -1,0 +1,27 @@
+if ! -r rk0 /etc/mknod rk0 b 0 0
+if ! -r rk1 /etc/mknod rk1 b 0 1
+if ! -r rk2 /etc/mknod rk2 b 0 2
+if ! -r rk3 /etc/mknod rk3 b 0 3
+if ! -r mt0 /etc/mknod mt0 b 3 0
+if ! -r mt1 /etc/mknod mt1 b 3 1
+if ! -r tap0 /etc/mknod tap0 b 4 0
+if ! -r tty8 /etc/mknod tty8 c 0 0
+if ! -r ppt /etc/mknod ppt c 1 0
+if ! -r lp0 /etc/mknod lp0 c 2 0
+if ! -r tty0 /etc/mknod tty0 c 3 0
+if ! -r tty1 /etc/mknod tty1 c 3 1
+if ! -r tty2 /etc/mknod tty2 c 3 2
+if ! -r tty3 /etc/mknod tty3 c 3 3
+if ! -r tty4 /etc/mknod tty4 c 3 4
+if ! -r tty5 /etc/mknod tty5 c 3 5
+if ! -r tty6 /etc/mknod tty6 c 3 6
+if ! -r tty7 /etc/mknod tty7 c 3 7
+if ! -r rrk0 /etc/mknod rrk0 c 9 0
+if ! -r rrk1 /etc/mknod rrk1 c 9 1
+if ! -r rrk2 /etc/mknod rrk2 c 9 2
+if ! -r rrk3 /etc/mknod rrk3 c 9 3
+if ! -r rmt0 /etc/mknod rmt0 c 12 0
+if ! -r rmt1 /etc/mknod rmt1 c 12 1
+chmod 644 rrk? rk?
+chmod 666 rmt? mt?
+chmod 622 tty*

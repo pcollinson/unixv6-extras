@@ -1,0 +1,83 @@
+.th AREDIT 7/14/23
+.sh Name
+aredit \- add files into archive files
+.sh SYNOPSIS
+.bd aredit
+[
+.bd c
+] [
+.bd ia
+] [
+.bd p
+] arfile.a marker append
+.sh DESCRIPTION
+.it Aredit
+inserts the
+.it append
+file before or after
+.it marker
+file in the archive file
+.it arfile.a.
+The command arguments are as follows:
+.s3
+.lp +4 4
+\fBi\fR	inserts
+.it append
+before the
+.it marker.
+.lp +4 4
+\fBa\fR	places
+.it append
+after the
+.it marker.
+.lp +4 4
+\fBc\fR	can be used to replace the
+.it marker
+file in addition to adding or inserting the
+.it append
+file.
+.lp +4 4
+\fBp\fR	preserves the temporary files.
+.i0
+.s3
+The
+.it archive
+file, the
+.it append
+file and the
+.it marker
+file should all be present in the same directory.
+A new temporary directory
+.i aredit.tmp
+is created, and the program changes into it.
+The archive file is unpacked into the directory.
+The
+.it append
+file is copied into the directory, as is
+.it marker
+file if the \fBc\fR flag is given.
+.s3
+The archive is rebuilt into
+.it templib.a
+maintaining the original file order. When the
+.it marker
+file is found, it's copied into
+.it templib.a
+with the
+.it append
+file placed before or after it, depending on the \fBi\fR or \fBa\fB
+flags.
+.s3
+Finally the temporary archive is copied over the source archive file
+and all temporary files are removed.
+.s3
+The
+.it append
+file will be ignored if is found in the list while processing, this
+allows the program to be used to move items in the archive.
+.sh FILES
+aredit.tmp, templib.a
+.SH SEE ALSO
+ar(I)
+.SH AUTHOR
+Peter Collinson

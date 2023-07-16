@@ -1,0 +1,73 @@
+.th CPTREE I 6/11/77
+.sh NAME
+cptree \*- filestore sub-tree copy.
+.sh SYNOPSIS
+.bd cptree
+[flags] {input directory} {output directory}
+.sh DESCRIPTION
+.it Cptree
+copies the sub-tree specified by {input directory} to
+{output directory}.  If {output directory} does not exist
+it is created.  Sub-directories of {output directory} are created
+as required.
+.it "Special files"
+are not copied.
+.br
+.bd Warning
+\*- existing copies of files in the output tree are automatically
+over-written (see -o flag).
+.s3
+The (optional)
+.bd flags
+are :-
+.s3
+.bd -a
+Include all files whose names start with '.' (they are otherwise
+ignored).
+.s3
+.bd -p
+Suppress printing of the commentary.
+.s3
+.bd -o
+Do 
+.bd not
+overwrite existing files in the output tree.
+.s3
+.bd -u
+Unlink (delete) files in the input tree after they have
+been successfully copied.  Gives the same effect as 
+.it mv.
+.s3
+.bd -d
+Include empty directories (they are otherwise ignored).
+.s3
+.bd -D3
+Copy subtree to depth 3.
+.br
+The most common use, -D1,
+causes a copy of only the plain files in the {input directory}.
+.s3
+.bd -M3:7a
+Copy only files last modified
+.it after
+3 days 7 hours ago.
+.s3
+.bd -M3:7b
+Copy only files last modified 
+.it before
+3 days 7 hours ago.
+.s3
+.bd "-A...."
+Same as -M flag, with time time of last access instead
+of time of last modification.
+.s3
+.bd -t
+Transfer ownership of copy to owner of original file
+(super-user only).
+.sh DIAGNOSTICS
+.it
+.it Cptree
+gives extensive diagnostics in the event of an error.
+The error messages are not affected by the -p flag.
+.sh BUGS
+

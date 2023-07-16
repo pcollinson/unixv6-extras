@@ -1,0 +1,41 @@
+: script to install the new ctime.c and the new support
+: code into libc.a
+: The support code is needed before some of the other system calls
+: and this is not supported by ar.
+:
+if -r /bin/aredit goto arok
+if -r /usr/bin/aredit goto arok
+echo Cannot find aredit installed on /bin or /usr/bin
+echo Please install it
+exit
+: arok
+
+if -r libc.a goto havelib
+echo 'Copying /lib/libc.a to this directory'
+cp /lib/libc.a libc.a
+if  -r libc.a goto havelib
+echo "Copy of libc.a failed"
+exit
+: havelib
+
+echo "Compiling ctime.c"
+cc -c -O ctime.c
+if -r ctime.o goto ctcompiled
+echo "Failed to compile ctime.c"
+exit
+
+: ctcompiled
+echo "Compiling ctsup.s"
+as ctsup.s
+if -r a.out goto compiled
+echo "Failed to compile ctsup.s"
+exit
+
+: compiled
+echo 'Installing ctime.o and ctsup.o into libc.a'
+aredit ca libc.a ctime.o ctsup.o
+
+echo 'Now check libc.a and copy it to /lib/libc.a'
+echo 'Once that is done, check that date.c can be compiled '
+echo 'with the library'
+echo 'run complib'

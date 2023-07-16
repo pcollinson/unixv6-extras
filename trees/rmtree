@@ -1,0 +1,15 @@
+: rmtree dir
+: will remove all files and dirs from the argument dir
+if ! -r $1 goto fail
+rm -r -f $1
+find $1 -type d -a -print | sort -r > /tmp/.dirlist
+echo '1,$s/^/rmdir /' > /tmp/.rmded
+echo 'w' >> /tmp/.rmded
+echo 'q' >> /tmp/.rmded
+ed - /tmp/.dirlist < /tmp/.rmded
+sh /tmp/.dirlist
+rm /tmp/.dirlist /tmp/.rmded
+exit 0
+: fail
+echo $1 not found
+exit 1

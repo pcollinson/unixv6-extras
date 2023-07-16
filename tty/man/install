@@ -1,0 +1,8 @@
+: install man pages
+cp getty.8 /usr/doc/man/man8
+cp gtty.2 /usr/doc/man/man2
+cp stty.1 /usr/doc/man/man1
+cp stty.2 /usr/doc/man/man2
+cp terms.2 /usr/doc/man/man2
+cp tty.4 /usr/doc/man/man4
+echo done

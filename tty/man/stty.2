@@ -1,0 +1,59 @@
+.th STTY II 12/15/74
+.sh NAME
+stty \*- set mode of a terminal
+.sh SYNOPSIS
+(stty = 31.)
+.br
+(file descriptor in r0)
+.br
+sys stty; arg
+.br
+.li
+...
+.br
+arg:  .byte ispeed, ospeed; .byte erase, kill, mode
+.s3
+.nf
+stty( filedes, arg )
+int	filedes;
+struct	{
+	char	ispeed, ospeed;
+	char	erase, kill;
+	char 	mode;
+	}  *arg;
+.fi
+.sh DESCRIPTION
+.it "Stty"
+sets the mode bits and character speeds of the terminal whose
+file descriptor
+is passed in r0
+(filedes from C).
+.s3
+.it "Stty"
+is equivalent to a
+.it terms
+call with
+.it "action=1."
+This is fully described in
+.bd terms(II)
+.s3
+There is a major difference between the
+.it stty
+system call in the the new driver and the
+original Bell
+.it stty
+call. In the new driver only 5 bytes of data
+are passed, as opposed to 6 bytes in the
+old driver.  The sixth byte used to set the
+delays for the terminal; to set the delays
+now requires a
+.it terms
+system call.
+.sh "SEE ALSO"
+terms(II), stty(I), gtty(II)
+.sh DIAGNOSTICS
+The error bit
+(c-bit) is set if the file descriptor does not refer to a terminal.
+From C, a negative value indicates an error.
+.sh AUTHOR
+E.S. Jones, Dept Computing Science, Glasgow University.

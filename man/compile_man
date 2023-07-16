@@ -1,0 +1,3 @@
+: compile man
+cc -s -O man.c
+mv a.out man

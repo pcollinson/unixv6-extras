@@ -1,0 +1,13 @@
+: Build a version of date with locally
+: compiled binaries
+: This is for date bootstrap
+echo Making ctsup.o
+as ctsup.s; mv a.out ctsup.o
+echo Making ctime.o
+cc -c -O ctime.c
+echo 'Making date'
+cc -s -O date.c ctime.o ctsup.o
+mv a.out date
+echo 'Making ls'
+cc -s -O orig/ls.c ctime.o ctsup.o
+mv a.out ls

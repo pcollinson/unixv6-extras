@@ -1,0 +1,11 @@
+echo cc badino.c
+cc -O badino.c testlib
+mv a.out badino
+
+echo cc confpr.c
+cc -O confpr.c testlib
+mv a.out confpr
+
+echo cc superb.c
+cc -O superb.c testlib
+mv a.out superb

@@ -1,0 +1,7 @@
+echo cp m40.s /usr/sys/conf
+cp m40.s /usr/sys/conf
+echo cp sysent.c /usr/sys/ken
+cp sysent.c /usr/sys/ken
+echo cp sys4.c /usr/sys/ken
+cp sys4.c /usr/sys/ken
+echo 'Now rebuild the system'

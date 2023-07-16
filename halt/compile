@@ -1,0 +1,4 @@
+as stopunix.s
+mv a.out stopunix.o
+cc -s -O halt.c stopunix.o
+mv a.out halt

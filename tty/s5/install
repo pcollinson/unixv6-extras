@@ -1,0 +1,26 @@
+: script to install the terms.s C interface call in /lib/libc.a
+: we need aredit
+if -r /usr/bin/aredit goto arok
+if -r /bin/aredit goto arok
+echo Cannot find aredit installed on /bin or /usr/bin
+echo Please install it
+exit
+: arok
+
+if -r libc.a goto havelib
+echo 'Copying /lib/libc.a to this directory'
+cp /lib/libc.a libc.a
+if  -r libc.a goto havelib
+echo "Copy of libc.a failed"
+exit
+: havelib
+
+echo 'Compiling terms.s'
+as terms.s
+mv a.out terms.o
+
+: add terms.o before cerror.o
+echo 'Editing libc.a using aredit'
+aredit i libc.a cerror.o terms.o
+
+echo "Now check libc.a and copy it back to /lib"

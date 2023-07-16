@@ -1,0 +1,3 @@
+: compile ssp 
+cc -s -O ssp.c
+mv a.out ssp

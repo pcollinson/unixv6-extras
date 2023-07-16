@@ -1,0 +1,118 @@
+.th GETTY VIII 17/6/77
+.sh NAME
+getty \*- set mode of terminal
+.sh SYNOPSIS
+.bd /etc/getty
+[char]
+.sh DESCRIPTION
+.bd "Getty"
+is invoked by
+.it init(VIII).
+It first prints the 'Login:' message on the terminal
+and reads the user's name.
+It then forks
+.it login(I)
+with the user's name as argument.
+Getty attempts to adapt the system to the
+characteristics of the terminal.
+.s3
+.it "Getty"
+is called by
+.it init
+when
+.it init
+succeeds in opening the terminal,
+either when the system comes up, or when the terminal
+is switched on.
+.it Getty
+is called with a one letter argument, this letter
+being taken from the entry for that
+port in the
+.it /etc/ttys
+file.
+It is used to guess what kind of terminal
+is attached to the port.
+The values are :-
+.s1
+.lp +12 7
+-	console DECwriter (300 baud)
+.lp +12 7
+0	(i)  general purpose (300 baud)
+.lp +12
+	(ii) general purpose (110 baud)
+.lp +12 7
+1	DECwriters (300 baud)
+.lp +12 7
+2	teletypes (110 baud, lcase)
+.lp +12 7
+3	slow VDUs (300 baud)
+.lp +12 7
+4	fast VDUs (4800 baud)
+.lp +12 7
+5 	Data100s (1200 baud)
+.i0
+.s3
+Each entry in this table (except '0'(ii)) has a successor.
+The '-' entry has itself as successor,
+and the successor of '0'(i) is '0'(ii).
+All other entries have '0'(i) as their successor.
+The '0' entries set <newline> and <return>
+delays adequate for most printing terminals.
+.s3
+.it "Getty"
+puts the terminal into
+.it userdelimit
+and
+.it breaks
+mode (see tty(IV)), with all characters less than <space>
+(except ^r)
+specified as user delimit characters.
+The first user delimit character to be
+typed ends the name.
+.s3
+If the user's name ends in <newline> it is accepted;
+if it ends in <return> it is also accepted,
+but the terminal is put into
+.it crmod
+mode.
+If the name ends in anything else it is not accepted,
+and except for two special cases
+.it getty
+then prints the 'Login:' message again.
+.s3
+If the name ends in ^c (since
+.it breaks
+mode is set, <break> is taken as ^c) getty moves to the next entry
+in the table,
+until it reaches '0'(ii),
+whereupon it goes back to the
+entry that it started with.
+By typing <break> the user can adjust the system to
+the speed of the terminal.
+.s3
+If the name ends in ^z
+.it getty
+exits, and
+.it init
+will then fork a new
+.it getty
+for the port.  This is useful when
+.it getty
+has become confused.
+.s3
+When the user's name has been accepted by
+.it getty,
+it examines the characters in the name,
+and if it contains
+upper case letters, but no lower case letters
+.it getty
+will put the terminal into
+.bd lcase
+mode.
+.sh FILES
+/etc/ttys
+.sh "SEE ALSO"
+tty(IV), init(VII)
+.sh BUGS
+.sh AUTHOR
+E.S. Jones, Dept Computing Science, Glasgow University.

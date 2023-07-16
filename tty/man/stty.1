@@ -1,0 +1,116 @@
+.th STTY I 8/8/77
+.sh NAME
+stty \*- set and/or report terminal status
+.sh SYNOPSIS
+.bd stty
+[ tty x ] [ option ... ]
+.sh DESCRIPTION
+.it Stty
+sets and reports the status of terminals.
+If the "tty\ x" arguments are given, the command applies to
+/dev/ttyx; otherwise it applies to the user's own terminal.
+The options which may be used are described below.
+If no option is specified, stty merely reports the current status
+of the terminal and no change is made.   If any options are given,
+stty checks their validity.   An invalid option causes the command
+to be rejected.   Once the desired changes have been made, stty
+reports the new status of the terminal.
+The command thisisa(I) contains "canned" calls of stty for the
+local selection of terminals.
+.sp 2
+.na
+.nf
+.dt
+8-bit	    set 8-bit mode (disallowed on user's terminal)
+breaks	    treat the break key as equivalent to ^c
+data100	    invert lower and upper case on input
+echo	    print every character typed
+ek	    reset the default erase and kill characters
+erase c	    set the erase character to c
+even	    allow even-parity input
+hold	    (in 8-bit mode) suspend/resume output on ^s/^q
+hupcl	    hang up modem connection on last close
+indicate    print control-characters legibly (e.g. ^c)
+kill c	    set the kill character to c
+lower	    equivalent to "!upper"
+nl	    allow only <newline> to end input lines
+odd	    allow odd-parity input
+quiet	    do not report the new status of the terminal
+upper	    map lower case for 64-character terminals
+vdu	    back-space over erased characters
+.sp
+!8-bit	    reset 8-bit mode
+!breaks	    ignore communication-line breaks
+!data100    return to sanity
+!delimit    switch off user-delimiting
+!echo	    do not print any input
+!even	    disallow even-parity input
+!hold	    (in 8-bit mode) ignore ^s/^q
+!hupcl	    do not hang up modem connection on last close
+!indicate   do not print control-characters legibly
+!lower	    equivalent to "upper"
+!nl	    treat <return> as <newline>
+!odd	    disallow odd-parity input
+!quiet	    report the new terminal status (default)
+!raw	    switch off raw mode
+!upper	    reset lower case mapping
+!vdu	    echo erased characters between '[' and ']'
+.sp
+.ne 16
+.ad
+.fi
+In the following d represents a decimal integer in the
+range 0 <= d <= 127 .
+.sp
+.na
+.nf
+nldelay d	set the <newline> delay to be d/50 secs
+!nldelay	equivalent to "nldelay 0"
+.sp
+crdelay d	set the <return> delay to be d/50 secs
+!crdelay	equivalent to "crdelay 0"
+.sp
+tabs d		the terminal has hardware tabs, set the
+		horizontal-tab delay to be d/50 secs
+!tabs d		the terminal does not have hardware tabs, set
+		the horizontal tabs stops every d spaces
+!tabs 0		set the default horizontal tab stops
+!tabs		equivalent to "!tabs 0"
+.sp
+skips d		the terminal has hardware forms control, set
+		the FF/VT delay to be d/50 secs
+!skips d	the terminal does not have forms control, set
+		the FF/VT skip length to be d linefeeds
+!skips 0	ignore FF/VT
+!skips		equivalent to "!skips 0"
+.sp
+line d		set the line width to be d (up to 255 here)
+line 0		the line is effectively infinite
+!line		equivalent to "line 0"
+.sp
+page d		set the page length to be d
+page 0		the page is effectively infinite
+!page		equivalent to "page 0"
+.ad
+.fi
+.sp 2
+In the following s represents one of the 16
+speeds (in bits per second, or "baud") :-
+.na
+.nf
+.sp
+0     50     75     110     134     150     200     ext-a
+300   600    1200   1800    2400    4800    9600    ext-b
+.sp
+input s		set the input speed to be s
+output s	set the output speed to be s
+speed s		set the input and output speeds to be s
+.sp
+.ad
+.fi
+Specifying a speed of 0 causes the line to be hung-up at once;
+impossible speed changes are ignored.
+.sh "SEE ALSO"
+thisisa(I), terms(II), tty(IV)
+.sh AUTHOR
+W. Findlay, Computing Science Department, Glasgow University

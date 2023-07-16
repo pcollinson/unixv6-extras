@@ -1,0 +1,14 @@
+: Installing files in /usr/sys/conf
+if ! -r /usr/sys/conf goto fail
+cp devices /usr/sys/conf
+echo cp devices /usr/sys/conf
+cp installux /usr/sys/conf/install
+echo cp installux /usr/sys/conf/install
+cp rebuild /usr/sys/conf
+echo cp rebuild /usr/sys/conf
+cp replace /usr/sys/conf
+echo cp replace /usr/sys/conf
+exit 0
+: fail
+echo Cannot find /usr/sys/conf
+exit 0

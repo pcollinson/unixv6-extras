@@ -1,0 +1,12 @@
+echo "Making getty ""
+cc -s -O getty.c
+mv a.out getty
+echo "Making login"
+cc -s -O login.c
+mv a.out login
+echo "Making login"
+cc -s -O rawst.c
+mv a.out rawst
+echo "Making stty"
+cc -s -O stty.c
+mv a.out stty

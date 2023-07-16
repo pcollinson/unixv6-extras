@@ -1,0 +1,11 @@
+: install fsck - in /etc
+echo "Installing /etc/fsck"
+cc -s -O fsck.c
+mv a.out fsck
+cp fsck /etc
+: manual page
+if -r /usr/doc/man/man8/fsck.8 got skipman
+echo "Installing /usr/doc/man8/fsck.8:
+cp fsck.8 /usr/doc/man8/fsck.8
+: skipman
+exit

@@ -46,3 +46,8 @@ docs/_build/
 # Emacs files
 *~
 *_flymake.*
+
+# Ignore development files
+time-dev/
+MT
+UT

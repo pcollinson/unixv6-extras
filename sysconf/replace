@@ -1,0 +1,4 @@
+cp a.out /unix
+rm a.out
+sync
+echo 'Replaced'

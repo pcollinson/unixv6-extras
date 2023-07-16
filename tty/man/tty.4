@@ -1,0 +1,319 @@
+.th TTY IV 20/10/77
+.sh NAME
+tty \*- interface for terminals
+.sh DESCRIPTION
+This section describes
+both a particular special file,
+and the general nature of the interface for terminals.
+.s3
+All of the low-speed asynchronous
+communications ports use the
+same general interface, no matter what
+hardware is involved.
+This section discusses
+the common features of the interface;
+the KL, DC, and DH writeups (IV) describe
+peculiarities of the individual devices.
+.s3
+When the special file for a terminal is
+opened, it causes
+the process to wait until a connection is established.
+In practice user's programs seldom open these
+files; they are opened by
+.it init
+and become a user's
+input and output file.
+The first such file open in a process becomes the
+.it "controlling terminal."
+The controlling terminal is inherited by a child process during a
+.it fork.
+.s3
+A process can always read or write on its controlling
+terminal via
+.it "/dev/tty. "
+This is particularly useful when a program
+requiring input from the terminal is run in a Shell command file.
+.s3
+Input from a terminal is stored in the system's
+character input buffers (henceforth 'buffer')
+until the user types a
+.bd "delimit input"
+character.  In normal mode (below) the 'delimit input' character
+is <newline> (or <return>, see "crmod" below).
+The process that is currently reading
+from the terminal is then wakened up and passed the characters in the
+buffer.
+Regardless of the number of characters specified in the user's
+read statement, at most one group of characters up to
+a 'delimit input' will be transmitted.
+.s3
+The characters in the buffer, back to the
+last 'delimit input' character, are available for
+editing using the input control characters (see "Normal mode").
+.s3
+Characters may be typed at any time,
+even while output is occurring, and are only lost when the
+input buffer is full, which is rare,
+or when the user has accumulated the maximum allowed number of
+input characters which have not yet been read by some process.
+Currently this limit is 132 characters.
+When the input limit is reached further characters
+are thrown away,
+and are only echoed as <bell>.
+.s3
+Except in eight bit mode, the parity
+bit is always removed from
+character input.  This is a departure from the previous
+driver which did not remove parity in
+.it raw
+mode.  The treatment of parity on output is dependent
+on the particular device driver.
+.s3
+Each terminal (special file) has various modes.  These
+modes may be changed by use of the
+.it terms
+system call, or for a restricted set of modes by the
+ q.it stty
+system call (II).  The most important of these modes are
+described below.  For a full list see the description of
+.it terms.
+.s3
+.bd "Normal mode"
+.s3
+A terminal is usually in normal mode,
+and various characters that the user may
+type have special meanings
+(n.b.  ^c  =  control and c ) :-
+.s3
+Input control characters
+.lp +8 8
+<delete>	The default erase character.
+.lp +8 8
+^u	The default kill-line character.
+.lp +8 8
+^w	Erase the last word, where a word is defined as a string
+of alphanumeric characters.  If the last character on the
+line was not alpanumeric, ^w deletes one character.
+.lp +8 8
+^r	Re-echo the current line.
+.lp +8 8
+^v	Take the next character as
+literal, regardless of special meanings (echoed as '\\').
+.i0
+.s3
+Output control characters
+.lp +8 8
+^s	Hold up transmission of output.
+.lp +8 8
+^q	Restart transmission.
+.lp +8 8
+^o	Delete further output until another
+^o is typed, or a process attempts
+to read from the terminal.
+.i0
+.s3
+Process control characters
+.lp +8 8
+^d	End of file for process reading from the terminal.
+.lp +8 8
+^c	Send all processes that have this as
+controlling terminal an
+.it interrupt
+signal.
+.lp +8 8
+^\\	Send all processes that have this as
+.br
+controlling terminal a
+.it quit
+signal.
+.i0
+.s3
+Each group of characters erased on a printing terminal
+is preceeded by a '[', followed by the characters erased,
+and terminated by ']'.  On a VDU the characters are simply
+deleted from the screen.
+The 'erase-character' and 'kill-line' characters
+are defaults only and may be changed by the
+.it stty
+and
+.it terms
+system calls.
+.s3
+The 'end of file' character is in fact a 'delimit input'.
+End of file is communicated by arranging for the process to
+have zero bytes returned from its read.  This is the system convention for
+indicating end of file.
+This happens solely as a result of the special treatment of ^z,
+and does not happen in eight bit mode, or user delimit mode
+when ^z is specified as a delimit input character.
+.s3
+Note that these special characters are only interpreted.
+They are not normally placed in the input buffer for a process
+to read.  The purpose of the ^v character is to enable the
+user to suppress the interpretation of a special character:
+e.g. ^v  ^c   puts a ^c in the input buffer without sending
+any interrupt signals.
+.s3
+.bd "Userdelimit mode	"
+.br
+Using the
+.it terms
+system call the user may specify an
+arbitrary collection of characters
+as 'delimit input' characters.
+Characters specified as 'delimit input'
+lose any special meaning they may have in normal mode.
+.br
+For input
+.bd raw
+mode is equivalent to userdelimit mode with every character
+specified as a 'delimit input' character.
+.s3
+.bd "Paging	"
+.br
+A terminal (special file) whose page length is
+non-zero will be sent output in pages.
+That is, if the page length is n, when a process has sent
+n lines of text to the terminal it will wait until the user
+responds before transmitting any more output.
+.s3
+If the user responds with <newline> (see "crmod" below)
+one more line will be transmitted;
+if the user types ^q, or any graphic character, up to one
+more page will be transmitted.
+The character typed is otherwise
+ignored: i.e.  it is not interpreted as special, nor
+placed in the input buffer, nor echoed.
+All control characters other than <newline> and ^q have their normal
+functions in this state; they do not in themselves affect the paging.
+.s3
+Each time a process reads from the terminal the
+"position in the page" is reset to the start of a page.
+Thus the user will only be aware of paging when
+a process is tranmitting a long sequence of output to the terminal.
+.s3
+.bd "Capitals only	"
+.br
+For terminals that have only the 64 character set, capitals
+only mode provides a mechanism for communicating all 96 characters.
+On input all letters are mapped into lower case
+and on output all lower case letters are printed in upper case.
+To input an upper case letter type ^v<letter>.
+Similarly, upper case letters are printed as \\<letter>.
+For the other characters not in the 64 character set:
+.br
+	To get		type ^v followed by
+.br
+	  ` (grave)		' (apostrophe or acute)
+.br
+	  |			!
+.br
+	  ~ (tilde)		^ (circumflex or up-arrow)
+.br
+	  {			(
+.br
+	  }			)
+.br
+These are printed in the same form as they are echoed.
+.s3
+.bd "Eight bit mode	"
+.br
+Eight bit mode provides a path through an
+asynchronous port that will not alter any part of
+the data on either input or output.
+Echoing of input is not done.
+This mode is substantially different from others
+in that there is no concept of 'delimit input' characters.
+In eight bit mode, as soon as there is data
+in the input buffer, the process reading from the terminal
+is awakened and
+passed all the bytes in the input buffer,
+to a maximum of the number specified in the read call.
+.br
+There is only one special function available
+in this mode: the user can additionally specify
+.bd hold
+mode and the system will then respond to the ^s
+and ^q special characters (see above).  This enables a satellite
+processor controlling a slow device to do its
+own internal buffering.
+.s3
+.bd "crmod	"
+.br
+The standard end of line character in Unix is <newline>.
+For terminals that have <linefeed> instead of <newline>
+.it crmod
+mode will cause <return> to be mapped to <newline>
+on input, and <newline> to be printed as <return><linefeed>.
+Almost all terminals require this mode.
+.s3
+.bd "Indctl	"
+.br
+Non-printing characters (<bell> is taken as printing) are
+always echoed in a legible form.  Indctl mode causes them
+to be printed on output in the same legible form.
+.s3
+.bd "Breaks	"
+.br
+A distorted character on input will be interpreted as a <break>
+character.  Since some terminals can transmit only <break>
+characters while they are receiving,
+.it breaks
+mode will cause <break> characters to be changed to ^c,
+thus sending an interrupt signal to the user's process.
+Otherwise <break>
+is ignored (essential for noisy communication lines).
+.s3
+.bd "Hupcl	"
+.br
+Hang up on last close causes 'data terminal ready' to be
+removed on the line when the last process that has
+the terminal (special file) open
+closes it or terminates.
+This is useful for a port that is used for
+some special purpose, e.g.  connected to an Automatic
+Calling Unit which places outgoing calls.
+.s3
+.bd "Line width	"
+.br
+If the output to a terminal overflows the end of the line
+some terminals will print the remainder of the text on the next
+line (most VDUs) -  others will not (e.g. DECwriters).  If the
+line-width is set non-zero, then when the line
+overflows the system will insert a <newline> in the output.
+.s3
+When the carrier signal from the terminal drops (usually
+because the user has switched it off) a
+.it hangup
+signal is sent to all processes with that
+controlling terminal.
+Unless other arrangements have been made,
+this signal causes the processes to terminate.
+After this, any attempt to read from the
+terminal
+returns with an 'end of file' indication.
+Thus programs which read from a terminal and test for 'end of file'
+on their input
+can terminate appropriately.
+.s3
+When one or more
+characters are written, they are actually transmitted
+to the terminal as soon as previously-written characters
+have finished printing.
+Input characters are echoed by putting them in the output queue
+as they arrive.
+When a process produces characters more rapidly than they can be printed,
+it will be suspended when its output queue exceeds the high water mark.
+When the queue has drained down to the low water mark
+the process is resumed.
+The ^d (eot) character is not transmitted
+(except in raw mode and 8 bit mode)
+to prevent terminals
+which respond to it from hanging up.
+.sh FILES
+/dev/tty?  /dev/tty
+.sh "SEE ALSO"
+dc(IV), kl(IV), dh(IV), getty(VIII), stty(I), stty(II), gtty(II), signal(II)
+terms(II)
+.sh BUGS
+Half-duplex terminals are not supported.

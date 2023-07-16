@@ -1,0 +1,2 @@
+cc -s -O fsck.c
+mv a.out fsck

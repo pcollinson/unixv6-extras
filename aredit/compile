@@ -1,0 +1,7 @@
+: compile aredit
+echo 'Compiling aredit'
+cc -O aredit.c
+mv a.out aredit
+: install in /usr/bin
+echo 'Installing in /usr/bin'
+cp aredit /usr/bin

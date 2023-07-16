@@ -1,0 +1,20 @@
+: Build a version of date with locally
+: compiled binaries
+: This is for date bootstrap
+echo 'Compile date with the library'
+cc -s -O date.c
+mv a.out date
+echo 'Compile ls with the library'
+cc -s -O orig/ls.c
+mv a.out ls
+echo 'Compile revised version of tp'
+: Compile tp
+: small change to date display
+: showing 2 digit years
+: and was unhappy with years
+: > 100.
+as tp?.s
+ld a.out -lc -l
+mv a.out tp
+echo 'If these have compiled properly, then ctime.o and ctsup.o'
+echo 'should be properly edited'

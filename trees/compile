@@ -1,0 +1,3 @@
+: Compile cptree
+cc -s -O cptree.c
+mv a.out cptree

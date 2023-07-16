@@ -1,0 +1,59 @@
+.th GTTY II 8/5/73
+.sh NAME
+gtty  \*-  get status of terminal
+.sh SYNOPSIS
+(gtty = 32.)
+.br
+(file descriptor in r0)
+.br
+sys gtty; arg
+.br
+.li
+...
+.br
+arg: .=.+5
+.s3
+.nf
+gtty( filedes, arg )
+.br
+int	filedes;
+char	arg[5];
+.fi
+.sh DESCRIPTION
+.it "Gtty"
+stores in the five bytes addressed by
+.it arg
+the status
+of the terminal whose file descriptor is given in r0
+(filedes from C).
+.s3
+.it "Gtty"
+is equivalent to a
+.it terms
+call with
+.it "action=0."
+This is fully described in
+.it terms(II).
+.s3
+There is a major difference between the
+.it gtty
+system call in the new driver and the original Bell
+.it gtty
+call.  The new call is passed only 5 bytes of
+data by the system, whereas the old call
+was passed six.  The extra byte contained
+the delay settings.  To
+obtain the delay settings with the new driver
+requires a
+.it terms
+system call.
+.sh "SEE ALSO"
+stty (II)
+.sh DIAGNOSTICS
+Error bit
+(c-bit) is set if the file descriptor does not refer
+to a typewriter.
+From C, a \*-1 value is returned for an
+error, 0, for a successful call.
+.sh AUTHOR
+E.S. Jones, Dept Computing Science, Glasgow University.

@@ -1,0 +1,223 @@
+.th TERMS II 8/5/77
+.sh NAME
+terms \*- mode of a device
+.sh SYNOPSIS
+(terms = 27.)
+.br
+(file descriptor in r0)
+.s3
+.ft B
+sys terms; action; arg
+.br
+where arg points to a 28 byte area
+.br
+(defined below).
+.s3
+.nf
+terms( filedes, action, arg)
+int	filedes, action;
+struct	{
+	char	ispeed;
+	char	ospeed;
+	char	erase;
+	char	kill;
+	int	modes;
+	char	nldelay;
+	char	crdelay;
+	char	htdelay;
+	char	vtdelay;
+	char	linewidth;
+	char	pagelength;
+	int	breaktable[8];
+	}  *arg;
+.fi
+.ft R
+.s3
+.sh DESCRIPTION
+.it Terms
+provides a general system call for reporting and changing
+the status of a device.
+.s3
+At the moment it is only implemented for terminals.
+A working knowledge of the tty driver
+(described in
+.it tty(IV))
+is needed to understand the
+.it terms
+call.
+.s3
+First, terms waits until the terminal is
+quiescent.
+.s3
+.bd action
+.br
+.lp +8 8
+0	gtty call (used by gtty system call)
+.lp +8 8
+1	stty call (used by stty system call)
+.lp +8 8
+2	read status of device into *arg
+.lp +8 8
+3	set status of device from contents of *arg
+.i0
+.s3
+.bd speeds
+(ispeed, ospeed)
+.br
+The speeds are selected by the following values, which correspond
+to the speeds supported by the DH-11.  For DC-11, DL-11 and KL-11
+interfaces impossible speed changes are ignored.
+.sp
+.ne 16
+.lp +8 8
+0	(hang up dataphone)
+.lp +8 8
+1	50 baud
+.lp +8 8
+2	75 baud
+.lp +8 8
+3	110 baud
+.lp +8 8
+4	134.5 baud
+.lp +8 8
+5	150 baud
+.lp +8 8
+6	200 baud
+.lp +8 8
+7	300 baud
+.lp +8 8
+8	600 baud
+.lp +8 8
+9	1200 baud
+.lp +8 8
+10	1800 baud
+.lp +8 8
+11	2400 baud
+.lp +8 8
+12	4800 baud
+.lp +8 8
+13	9600 baud
+.lp +8 8
+14	External A
+.lp +8 8
+15	External B
+.s3
+.i0
+The code conversion and line control required for
+IBM 2741 terminals (134.5 baud)
+must be implemented by the user's
+program.
+Half duplex is not supported.
+.s3
+.bd "erase, kill"
+.br
+The erase and kill characters for the terminal may
+be set by the user.
+The defaults are <delete> and ^u.
+.s3
+.it mode
+.br
+This is a collection of one bit flags which determine
+the system's treatment of the terminal.
+.s3
+.lp +8 8
+01	hupcl, hang up after last close
+.lp +8 8
+02	replace tabs by spaces (the terminal has no hardware tab)
+.lp +8 8
+04	capitals only, map upper case to lower case on input etc.
+.lp +8 8
+010	echo
+.lp +8 8
+020	crmod, map <return> to <newline>, and print <newline> as <return><newline>
+.lp +8 8
+040	raw mode
+.lp +8 8
+0100	odd parity allowed on input
+.lp +8 8
+0200	even parity allowed on input
+.lp +8 8
+0400	terminal is a VDU
+.lp +8 8
+01000	indctl, on output transmit control characters in printable form
+.lp +8 8
+02000	userdelimit, user selected delimit characters (see below)
+.lp +8 8
+04000	eight bit mode
+.lp +8 8
+010000	hold, allow the suspension of output in 8 bit mode
+.lp +8 8
+020000	breaks, map <break> characters to ^c
+.lp +8 8
+040000	replace VT and FF by multiple linefeeds (the terminal has
+no hardware forms control)
+.lp +8 8
+0100000	terminal is a Data100 (oh dearrrr)
+.i0
+.s3
+In
+.it userdelimit
+mode, the 'delimit input' characters are
+determined by using the
+.it breaktable
+array as a bit map (8 words = 128 bits).
+If bit n of the
+.it breaktable
+array is set then character n is
+a 'delimit input' character.
+The least significant bit of word 0 is bit 0,
+the most significant of word 7 is bit 127.
+.s3
+Otherwise, the
+.it breaktable
+is ignored by the system.
+.s3
+For a further details of the modes that are
+not self-explanatory, see
+.it tty(IV).
+.s3
+.bd delays
+.br
+The four delay fields each specify a
+delay of up to 127 1/50ths of a second after
+transmitting the relevant character.
+The 'vtdelay' applies to both <formfeed> (FF)
+and <vertical tab> (VT).
+If tabs are to be replaced by spaces, the 'tabdelay' is treated
+as the distance between tab stops.   A distance of zero is taken as the
+system default tab size (currently 8).
+Similarly, if VT and FF
+are to be replaced, the 'vtdelay' gives the number of linefeeds
+to output.   A value of zero causes VT and FF to be suppressed.
+.s3
+.bd linewidth
+and
+.bd pagelength
+.br
+See "Line width" and "Paging" in
+.it tty(IV).
+.s3
+.bd "gtty"
+and
+.bd "stty"
+calls
+.br
+For gtty/stty calls of
+.it terms
+only the first 5 bytes
+of data in *arg are passed, that is up to and including
+the first byte of the
+.it mode
+word.  This is almost compatible with the Bell
+.it gtty
+and
+.it stty
+system calls
+except that the delays (which occupied the 6th byte
+in the old driver) can no longer be reported or reset.
+.sh "SEE ALSO"
+tty(IV), stty(I)
+.sh DIAGNOSTICS
+The error bit
+(c-bit) is set if the file descriptor does not refer to a terminal.
+From C, a negative value indicates an error.

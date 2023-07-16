@@ -1,0 +1,64 @@
+\" Version of the naa macros for the UnixV6 man command
+\" Peter Collinson
+\" June 2023
+\" Lengthen the output line
+.ll +10
+.nr in 5
+.de i0
+.in \n(in
+..
+.i0
+.de lp
+.i0
+.ta \\$2+1
+.in \\$1
+.ti -\\$2
+..
+.de s1
+.sp 1
+.ne 4
+..
+.de s2
+.sp 1
+..
+.de s3
+.sp 1
+..
+.de th
+.ti 0
+.br
+\\$1(\\$2)  -  \\$3
+.sp 0.5
+..
+.de sh
+.s1
+.ne 5
+.ti 0
+\\$1
+.br
+..
+.de bd
+\\$1
+..
+.de bn
+\\$1\\t
+..
+.de it
+\\$1
+..
+.de dt
+.ta 8 16 24 32 40 48 56 64
+..
+.ds b B
+.ds G G
+.ds a '
+.ds - -
+.ds _ _
+.ds v |
+.ds p J
+.ds r
+.ds g `
+.ds X X
+.ds u u
+.ds > ->
+.ds |
