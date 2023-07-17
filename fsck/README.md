@@ -1,6 +1,6 @@
 # _fsck_ for V6
 
-This is a version of _fsck_ originally supplied to me by Clem Cole (from an early BSD system?). It will now compile and run on UNIX V6. The changes are all marked.
+This is an early version of _fsck_ from CMU supplied to me by Clem Cole. It seems to be aimed at the later Typesetter C compiler. It will now compile and run on UNIX V6. The changes are all marked.
 
 This version is not as forgiving as more recent versions of _fsck_. For example, it cannot recover files and put them into a _lost+found_ directory. I think that it's probably more destructive. However, it's easier to use than the standard _icheck_ and _dcheck_ programs.
 

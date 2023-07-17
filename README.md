@@ -18,7 +18,7 @@ This list is pretty much in the order that I worked on things.
 
 * __[uxtp](uxtp)__ - I needed something to get files in and out of V6 so I decided to implement a version of _tp_, V6's magnetic tape archive program. It's proved to be a fast way to get whole file trees in and out of V6. It seems to work for V7 too.
 
-* __[fsck](fsck)__ - The Unix file system can break and sometimes needs fixing. Clem Cole sent me a version of _fsck_  written for a later C compiler. I back ported it and wrote some tests to make sure it  works.
+* __[fsck](fsck)__ - The Unix file system can break and sometimes needs fixing. Clem Cole gave me an early version from CMU, but it seems to have been as written assuming the later Typesetter C Compiler. I've back ported it and have written some tests to make sure it works.
 
 * __[sysconf](sysconf)__ - Scripts to assist with rebuilding and installing the kernel.
 
