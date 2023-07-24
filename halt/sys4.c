@@ -257,18 +257,19 @@ profil()
 	u.u_prof[2] = u.u_arg[2];	/* pc offset */
 	u.u_prof[3] = (u.u_arg[3]>>1) & 077777; /* pc scale */
 }
+
 /*
  * Added as a system call to cleanly stop the system
- * Peter C Nov 1976
+ * Originally Peter C Nov 1976
+ * revised 2023
  */
 stopunix()
 {
-	if(suser())
-	{
+	if(suser()) {
+		/* if still updating then sleep */
+		while (updlock)
+			sleep(&lbolt, 0);
 		update();
-		/* was 5 for real hardware */
-		u.u_ar0[R0] = 2;
-		sslep();
 		stopit();
 	}
 }
