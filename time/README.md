@@ -4,7 +4,7 @@ Applications on the system that deal with time use a library routine _ctime.c_. 
 
 The job of  _gmtime_ is to reduce seconds to years, months etc. It was failing because the two word 32-bit assembler division and remainder routines couldn't handle the set of large numbers that are needed to represent time 'today' .
 
-The solution is to pick up the division and assembler routines from V7, which do work, and recode the _gmtime_ code to use them. I renamed them to make the names unique. There are actually bugs in the V7 assembler routines flagged by Henry Spencer in 1981 which I've fixed using the suggested changes.  The C code in the new _gmtime_  isn't particularly pretty when compared with the v7 code. There is new assembler module that contains the V7 code which i've called _ctsup.s_ and this needs installing in the C library (_libc.a_) in addition to the revised _ctime.c_ code. Of  course, this will all die in 2038.
+The solution is to pick up the division and assembler routines from V7, which do work, and recode the _gmtime_ code to use them. I renamed them to make the names unique. There are actually bugs in the V7 assembler routines flagged by Henry Spencer in 1981 which I've fixed using the suggested changes.  This may or may not be necessary. The C code in the new _gmtime_  isn't particularly pretty when compared with the v7 code. There is new assembler module that contains the V7 code which i've called _ctsup.s_ and this needs installing in the C library (_libc.a_) in addition to the revised _ctime.c_ code. Of  course, this will all die in 2038.
 
 ## Installation
 
@@ -20,7 +20,7 @@ FInally, once the library has been updated, use _complib_ to compile _date.c_ us
 
 * Use the new long division and remainder functions, so the  timestamp is now divided by 86400 to generate the number of days, and use the remainder to evaluate the hours, minutes seconds
 
-* Years are then worked out (as before) by iterating through the years from 1970 using _dysize_ to generate the number of days in the year sequence. The _dysize_ code needed to understand the correct algorithm to select leap years (this change is needed in V7 too) - 2000 is a leap year.
+* Years are then worked out (as before) by iterating through the years from 1970 using _dysize_ to generate the number of days in the year sequence. Initially I redid the _dysize_ code to use the approved algorithm. However the current one works until 2100, and since 32 bit time runs out in 2038, there seems little point in changing the code.
 
 * The day of the week is evaluated by a neat routine that I found on Wikipedia, the reference is in the code.
 

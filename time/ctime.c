@@ -225,8 +225,7 @@ int tim[];
 		d0 =- dysize(d1);
 
 	xtime[YEAR] = d1;
-	xtime[YDAY] = d0+1;	/* Jan 1 is day 1 */
-
+	xtime[YDAY] = d0;		/* 0-365 */
 
 	/*
 	 * generate month - change the dmsize
@@ -294,23 +293,15 @@ int *t;
 }
 
 /*
- * leap years - reworked
- * Originally it was when y is divisible by 4
- * now but NOT when the year is divisible by 100 but is divisible by 400
- * this needs fixing in v7 too - 2000 was a leap year
- *
- * can be called with a real year 1970
- * or a number which is year-1900
+ * This is called with a year
+ * and also a year-1900
+ * it will work until 2100
+ * but 32 bits are exhausted in 2038
+ * there seems little point in worrying
  */
-dysize(yr)
+dysize(y)
 {
-	register y;
-
-	y = yr;
-	/* called internally */
-	if (y < 500) y =+ 1900;
-
-	if (((y%4) == 0 && (y%100) != 0) || (y%400) == 0)
+	if((y%4) == 0)
 		return(366);
 	return(365);
 }
