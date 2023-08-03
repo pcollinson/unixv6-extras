@@ -6,10 +6,12 @@
 stopunix()
 {
 	if(suser()) {
-		/* if still updating then sleep */
-		while (updlock)
-			sleep(&lbolt, 0);
-		update();
-		stopit();
+		/* if still updating then return to caller */
+		if (updlock)
+			u.u_error = EBUSY;
+		else {
+			update();
+			stopit();
+		}
 	}
 }

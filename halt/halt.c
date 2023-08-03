@@ -85,8 +85,16 @@ main()
 		/* allow sync to settle */
 		sleep(2);
 		printf("Halting system\n");
-		stopunix();
-		/* no return */
+	        /* will return if update is busy */
+                i = 0;
+                while (stopunix() < 0) {
+                        printf("Disks busy\n");
+                        sleep(2);
+                        if (++i > 15) {
+                                printf("Halt abandoned - please stop by hand\n");
+                                break;
+                        }
+                }
 	}
 	exit(0);
 }
